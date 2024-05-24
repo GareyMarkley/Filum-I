@@ -104,7 +104,19 @@ let $hp = 100;
 let mana = 50;
 let stamina = 80;
 let hasKey = false;  // assuming no key is found for now
-</script><tw-passagedata pid="1" name="In the Beginning" tags="" position="600,600" size="100,100">The crunch of boots on cracked earth and screech of carion birds greet the party of three as they finally approach their destination. 
+
+/* Place this in the Story JavaScript section */
+window.useMove = function(moveName) {
+    var move = State.variables.moves[moveName];
+    if (move) {
+        var damage = State.variables.$PlayerDmg * move.damageMultiplier;
+        return damage + move.staminaCost
+    } else {
+        return "Move not found.";
+    }
+};
+
+</script><tw-tag name="Depracated" color="orange"></tw-tag><tw-tag name="Depracted" color="orange"></tw-tag><tw-tag name="WIP" color="blue"></tw-tag><tw-passagedata pid="1" name="In the Beginning" tags="" position="600,600" size="100,100">The crunch of boots on cracked earth and screech of carion birds greet the party of three as they finally approach their destination. 
 One wields a &lt;&lt;link &quot; Staff.&quot;&gt;&gt;
   &lt;&lt;set $Class to &quot;1&quot;&gt;&gt;
   &lt;&lt;goto &quot;Chara create&quot;&gt;&gt;
@@ -118,14 +130,13 @@ The last a short blade and a &lt;&lt;link &quot; Bow&quot;&gt;&gt;
   &lt;&lt;goto &quot;Chara create&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt; on their back.
 Which path will doth your feet take you?
-&lt;label&gt;What is your name? &lt;&lt;textbox &quot;$name&quot; &quot;Hero&quot;&gt;&gt;&lt;/label&gt;
+&lt;label&gt;What is your name? &lt;&lt;textbox &quot;$Name&quot; &quot;Hero&quot;&gt;&gt;&lt;/label&gt;
 
-</tw-passagedata><tw-passagedata pid="2" name="Chara create" tags="" position="800,600" size="100,100">$name
+[[Credits-&gt;Credits]]
 
-If player chooses x class
-
-
-
+/*QOL link*/
+[[-&gt;Chara create]]</tw-passagedata><tw-passagedata pid="2" name="Chara create" tags="" position="800,600" size="100,100">
+&lt;&lt;if $Class == 1&gt;&gt;
 &lt;&lt;set $Hp to 100&gt;&gt;
 &lt;div style=&quot;
   color: lightgreen;
@@ -136,27 +147,41 @@ If player chooses x class
   padding: 20px;
   box-sizing: border-box;
 &quot;&gt;Set Hp to 100&lt;/div&gt;
+&lt;&lt;set $Stamina to 80&gt;&gt;
+&lt;&lt;set $Mana to 150&gt;&gt;
 
+&lt;&lt;elseif $Class == 2&gt;&gt;
+&lt;&lt;set $Hp to 150&gt;&gt;
+&lt;&lt;set $Stamina to 100&gt;&gt;
+&lt;&lt;set $Mana to 50&gt;&gt;
 
+&lt;&lt;elseif $Class == 3&gt;&gt;
+&lt;&lt;set $Hp to 80&gt;&gt;
+&lt;&lt;set $Stamina to 150&gt;&gt;
+&lt;&lt;set $Mana to 100&gt;&gt;
+
+&lt;&lt;else&gt;&gt;
+&lt;&lt;set $Hp to 1000&gt;&gt;
+&lt;&lt;set $Stamina to 1000&gt;&gt;
+&lt;&lt;set $Mana to 1000&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+$Hp
+$Stamina
+$Mana
 
 
 	&lt;&lt;set $player to { hp: 100, mp: 50 }&gt;&gt;         // Create an object for player stats
-    
-
-
-    
-    
-    
 	&lt;&lt;set $partyMember to $player&gt;&gt;                // Reference the same object for party 	member
 	&lt;&lt;set $partyMember.hp -= 50&gt;&gt;                  // Reduce party member&#39;s hp
 	$player.hp // 50                               // Player&#39;s hp is also reduced
 	$partyMember.hp // 50                          // Party member&#39;s hp is reduced
 
 
+[[Skip Tutorial-&gt;Intro]]
+[[Tutorial-&gt;Tutorial]]
+[[Combat init test]] </tw-passagedata><tw-passagedata pid="3" name="Credits" tags="" position="600,800" size="100,100">Ad Astra &amp; SensibleNonsense/EugeneSlicknut</tw-passagedata><tw-passagedata pid="4" name="Tutorial" tags="" position="800,800" size="100,100">Hello $Name
 
-
-
-&lt;&lt;set _greetings to [&quot;hi&quot;, &quot;hello&quot;, &quot;good day&quot;, &quot;greetings&quot;]&gt;&gt;\
+[[Continue-&gt;Intro]]</tw-passagedata><tw-passagedata pid="5" name="Saved Code" tags="" position="600,400" size="100,100">&lt;&lt;set _greetings to [&quot;hi&quot;, &quot;hello&quot;, &quot;good day&quot;, &quot;greetings&quot;]&gt;&gt;\
 The man says, &quot;@@#target;&lt;&lt;= _greetings.random()&gt;&gt;@@.&quot;
 
 &lt;&lt;link &quot;Change&quot;&gt;&gt;
@@ -165,40 +190,112 @@ The man says, &quot;@@#target;&lt;&lt;= _greetings.random()&gt;&gt;@@.&quot;
 
 
 
-/* This is a comment. */
-
-
-
-
-[[Skip Tutorial-&gt;Intro]]
-[[Tutorial-&gt;Tutorial]]
-</tw-passagedata><tw-passagedata pid="3" name="Credits" tags="" position="600,800" size="100,100">Ad Astra &amp; SensibleNonsense/EugeneSlicknut</tw-passagedata><tw-passagedata pid="4" name="Tutorial" tags="" position="800,800" size="100,100">Hello $Name
-
-[[Continue-&gt;Intro]]</tw-passagedata><tw-passagedata pid="5" name="Saved Code" tags="" position="600,400" size="100,100">&lt;&lt;set _greetings to [&quot;hi&quot;, &quot;hello&quot;, &quot;good day&quot;, &quot;greetings&quot;]&gt;&gt;\
-The man says, &quot;@@#target;&lt;&lt;= _greetings.random()&gt;&gt;@@.&quot;
-
-&lt;&lt;link &quot;Change&quot;&gt;&gt;
-	&lt;&lt;replace &quot;#target&quot;&gt;&gt;&lt;&lt;= _greetings.random()&gt;&gt;&lt;&lt;/replace&gt;&gt;
-&lt;&lt;/link&gt;&gt;</tw-passagedata><tw-passagedata pid="6" name="Intro" tags="" position="1000,600" size="100,100">(if: _Profession is &#39;Wizard&#39;)[
-    (set: const num-type $Class to 1)
-    (set: num-type $HP to 10)
-](else-if: _Profession is &#39;Knight&#39;)[
-     (set: const num-type $Class to 2)
-     (set: num-type $HP to 20)
-](else-if: _Profession is &#39;Rogue&#39;)[
-     (set: const num-type $Class to 3)
-     (set: num-type $HP to 15)
-](else: )[
-    This should never happen
-]
-
-(print: $HP)
-
-
-[[asd-&gt;asd]]</tw-passagedata><tw-passagedata pid="7" name="Frequent Commands" tags="" position="800,400" size="100,100">&amp; Variables! 
-$name
-$HP
+&lt;&lt;if $Class == 1&gt;&gt;
+Magical Message here
+&lt;&lt;elseif $Class == 2&gt;&gt;
+Strong Message here
+&lt;&lt;elseif $Class == 3&gt;&gt;
+Agile Message here
+&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="6" name="Intro" tags="" position="1000,600" size="100,100"></tw-passagedata><tw-passagedata pid="7" name="Frequent Commands" tags="" position="800,400" size="100,100">&amp; Variables! 
+$Name
+$Hp
 $Mana
+$PlayerDmg
+$EnemyName
+$EnemyHp
+$EnemyDmg
+
+
+&lt;&lt;if $Class == 1&gt;&gt;
+Magical Message here
+&lt;&lt;elseif $Class == 2&gt;&gt;
+Strong Message here
+&lt;&lt;elseif $Class == 3&gt;&gt;
+Agile Message here
+&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="8" name="Combat init test" tags="WIP" position="1000,200" size="100,100">You see a Goblin approaching you with ill intent.
+
+&lt;&lt;link &quot;Fight.&quot;&gt;&gt;
+  &lt;&lt;set $EnemyName to &quot;Goblin&quot;&gt;&gt;
+   &lt;&lt;set $EnemyHp to &quot;80&quot;&gt;&gt;
+    &lt;&lt;set $EnemyDmg to &quot;5&quot;&gt;&gt;
+  &lt;&lt;goto &quot;Combat Framework&quot;&gt;&gt;
+  [[-&gt;Combat Framework]]
+&lt;&lt;/link&gt;&gt;
+
+
+/*QOL link*/
+[[Abilities-&gt;Player Abilities]] 
+[[Moves-&gt;Player Moves]] 
+
+&lt;&lt;set $moves = { 
+  &quot;Heavy Attack&quot;: { &quot;damageMultiplier&quot;: 2, &quot;staminaCost&quot;: 5 } 
+}&gt;&gt;</tw-passagedata><tw-passagedata pid="9" name="Combat Framework" tags="WIP" position="1000,400" size="100,100">$EnemyName
+$EnemyHp
+$EnemyDmg
+
+
+Get player actions;
+
+&lt;&lt;button &quot;Use Heavy Attack&quot;&gt;&gt;
+  &lt;&lt;set _result = useMove(&quot;Heavy Attack&quot;)&gt;&gt;
+  &lt;&lt;replace &quot;#result&quot;&gt;&gt;
+    &lt;span id=&quot;result&quot;&gt;&lt;&lt;print _result.message&gt;&gt;&lt;/span&gt;
+    &lt;!-- Optionally display additional values --&gt;
+    &lt;div&gt;Damage: &lt;&lt;print _result.damage&gt;&gt;&lt;/div&gt;
+    &lt;div&gt;Stamina: &lt;&lt;print _result.stamina&gt;&gt;&lt;/div&gt;
+  &lt;&lt;/replace&gt;&gt;
+&lt;&lt;/button&gt;&gt;
+
+&lt;!-- Placeholder for result display --&gt;
+&lt;span id=&quot;result&quot;&gt;&lt;/span&gt;
+
+
+&lt;!-- Placeholder for result display --&gt;
+&lt;span id=&quot;result&quot;&gt;&lt;/span&gt;</tw-passagedata><tw-passagedata pid="10" name="Player Abilities" tags="Depracted" position="1200,200" size="100,100">&lt;&lt;set $abilities = [&quot;Strength&quot;, &quot;Agility&quot;, &quot;Intelligence&quot;]&gt;&gt;
+
+&lt;&lt;link &quot;Add Dexterity&quot;&gt;&gt;
+  &lt;&lt;set $abilities.push(&quot;Dexterity&quot;)&gt;&gt;
+  &lt;&lt;replace &quot;#abilities-list&quot;&gt;&gt;
+    Abilities:
+    &lt;ul id=&quot;abilities-list&quot;&gt;
+      &lt;&lt;for _ability range $abilities&gt;&gt;
+        &lt;li&gt;&lt;&lt;print _ability&gt;&gt;&lt;/li&gt;
+      &lt;&lt;/for&gt;&gt;
+    &lt;/ul&gt;
+  &lt;&lt;/replace&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+
+&lt;&lt;link &quot;Remove Strength&quot;&gt;&gt;
+  &lt;&lt;set $abilities.splice($abilities.indexOf(&quot;Strength&quot;), 1)&gt;&gt;
+  &lt;&lt;replace &quot;#abilities-list&quot;&gt;&gt;
+    Abilities:
+    &lt;ul id=&quot;abilities-list&quot;&gt;
+      &lt;&lt;for _ability range $abilities&gt;&gt;
+        &lt;li&gt;&lt;&lt;print _ability&gt;&gt;&lt;/li&gt;
+      &lt;&lt;/for&gt;&gt;
+    &lt;/ul&gt;
+  &lt;&lt;/replace&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+
+Abilities:
+&lt;ul id=&quot;abilities-list&quot;&gt;
+  &lt;&lt;for _ability range $abilities&gt;&gt;
+    &lt;li&gt;&lt;&lt;print _ability&gt;&gt;&lt;/li&gt;
+  &lt;&lt;/for&gt;&gt;
+&lt;/ul&gt;
+
+
+[[Combat init test-&gt;Combat init test]] </tw-passagedata><tw-passagedata pid="11" name="Player Moves" tags="WIP" position="800,200" size="100,100">&lt;&lt;set $moves = { 
+  &quot;Heavy Attack&quot;: { &quot;damageMultiplier&quot;: 2, &quot;staminaCost&quot;: 5 } 
+}&gt;&gt;
+
+
+
+&lt;&lt;set $moves = { &quot;Heavy Attack&quot;: { &quot;damageMultiplier&quot;: 2, &quot;staminaCost&quot;: 5 } }&gt;&gt;
+
+
+
+[[Combat init test-&gt;Combat init test]] 
 </tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
 	/*! SugarCube JS */
