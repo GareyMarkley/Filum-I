@@ -2,7 +2,7 @@
 
 Utilized Twine with the SugarCube v2 preset. 
 
-Language is Harlowe 3.3.8
+Language is SugarCube v2
 
 Harlowe Manual : https://twine2.neocities.org/#type_number
 
