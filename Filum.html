@@ -107,37 +107,20 @@ let hasKey = false;  // assuming no key is found for now
 </script><tw-passagedata pid="1" name="In the Beginning" tags="" position="600,600" size="100,100">The crunch of boots on cracked earth and screech of carion birds greet the party of three as they finally approach their destination. 
 One wields a &lt;&lt;link &quot; Staff.&quot;&gt;&gt;
   &lt;&lt;set $Class to &quot;1&quot;&gt;&gt;
-  &lt;&lt;goto &quot;NextScene&quot;&gt;&gt;
+  &lt;&lt;goto &quot;Chara create&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 Another a &lt;&lt;link &quot; Greatsword.&quot;&gt;&gt;
   &lt;&lt;set $Class to &quot;2&quot;&gt;&gt;
-  &lt;&lt;goto &quot;NextScene&quot;&gt;&gt;
+  &lt;&lt;goto &quot;Chara create&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 The last a short blade and a &lt;&lt;link &quot; Bow&quot;&gt;&gt;
   &lt;&lt;set $Class to &quot;3&quot;&gt;&gt;
-  &lt;&lt;goto &quot;NextScene&quot;&gt;&gt;
+  &lt;&lt;goto &quot;Chara create&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt; on their back.
 Which path will doth your feet take you?
 &lt;label&gt;What is your name? &lt;&lt;textbox &quot;$name&quot; &quot;Hero&quot;&gt;&gt;&lt;/label&gt;
 
-##(dropdown: 2bind $_Profession,&quot;Wizard&quot;,&quot;Knight&quot;,&quot;Rouge&quot;)
-
-&lt;&lt;set $number to 1&gt;&gt;
-&lt;&lt;set $string to &quot;2&quot;&gt;&gt;
-&lt;&lt;= $string + $number&gt;&gt; /* &quot;21&quot; */
-&lt;&lt;= $string + String($number)&gt;&gt; /* &quot;21&quot; */
-&lt;&lt;= Number($string) + $number&gt;&gt; /* 3 */
-
-$name
-
-[[Create Character-&gt;Chara create]]
-[[Click here for Credits-&gt;Credits]]+
-
-
-
-&lt;&lt;if $var is 1&gt;&gt;
-	The variable is 1.
-&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="2" name="Chara create" tags="" position="800,600" size="100,100">$name
+</tw-passagedata><tw-passagedata pid="2" name="Chara create" tags="" position="800,600" size="100,100">$name
 
 If player chooses x class
 
@@ -182,6 +165,7 @@ The man says, &quot;@@#target;&lt;&lt;= _greetings.random()&gt;&gt;@@.&quot;
 
 
 
+/* This is a comment. */
 
 
 
