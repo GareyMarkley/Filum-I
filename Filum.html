@@ -116,7 +116,7 @@ window.useMove = function(moveName) {
     }
 };
 
-</script><tw-tag name="Depracated" color="orange"></tw-tag><tw-tag name="Depracted" color="orange"></tw-tag><tw-tag name="WIP" color="blue"></tw-tag><tw-passagedata pid="1" name="In the Beginning" tags="" position="600,600" size="100,100">The crunch of boots on cracked earth and screech of carion birds greet the party of three as they finally approach their destination. 
+</script><tw-tag name="Depracated" color="orange"></tw-tag><tw-tag name="Depracted" color="orange"></tw-tag><tw-tag name="WIP" color="blue"></tw-tag><tw-tag name="Marked-for-death" color="red"></tw-tag><tw-passagedata pid="1" name="In the Beginning" tags="" position="600,600" size="100,100">The crunch of boots on cracked earth and screech of carion birds greet the party of three as they finally approach their destination. 
 One wields a &lt;&lt;link &quot; Staff.&quot;&gt;&gt;
   &lt;&lt;set $Class to &quot;1&quot;&gt;&gt;
   &lt;&lt;goto &quot;Chara create&quot;&gt;&gt;
@@ -168,7 +168,7 @@ Which path will doth your feet take you?
 $Hp
 $Stamina
 $Mana
-
+&lt;&lt;set $PlayerDmg to 20&gt;&gt;
 
 	&lt;&lt;set $player to { hp: 100, mp: 50 }&gt;&gt;         // Create an object for player stats
 	&lt;&lt;set $partyMember to $player&gt;&gt;                // Reference the same object for party 	member
@@ -196,7 +196,26 @@ Magical Message here
 Strong Message here
 &lt;&lt;elseif $Class == 3&gt;&gt;
 Agile Message here
-&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="6" name="Intro" tags="" position="1000,600" size="100,100"></tw-passagedata><tw-passagedata pid="7" name="Frequent Commands" tags="" position="800,400" size="100,100">&amp; Variables! 
+&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="6" name="Intro" tags="" position="1000,600" size="100,100">  
+&lt;&lt;set $heavyAttack = $moves.HeavyAttack&gt;&gt;
+
+
+
+- Damage Multiplier: &lt;&lt;print $heavyAttack.damageMultiplier&gt;&gt;
+- Stamina Cost: &lt;&lt;print $heavyAttack.staminaCost&gt;&gt;
+
+  
+  
+  &lt;&lt;set _joe = 
+  
+  &lt;&lt;print _result&gt;&gt;
+    &lt;span id=&quot;result&quot;&gt;&lt;&lt;print _result.message&gt;&gt;&lt;/span&gt;
+    &lt;!-- Optionally display additional values --&gt;
+    &lt;div&gt;Damage: &lt;&lt;print _result.damage&gt;&gt;&lt;/div&gt;
+    &lt;div&gt;Stamina: &lt;&lt;print _result.stamina&gt;&gt;&lt;/div&gt;
+    result
+    #result
+    _result</tw-passagedata><tw-passagedata pid="7" name="Frequent Commands" tags="" position="800,400" size="100,100">&amp; Variables! 
 $Name
 $Hp
 $Mana
@@ -213,7 +232,7 @@ Strong Message here
 &lt;&lt;elseif $Class == 3&gt;&gt;
 Agile Message here
 &lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="8" name="Combat init test" tags="WIP" position="1000,200" size="100,100">You see a Goblin approaching you with ill intent.
-
+/* I may try an set these to Temp variables later.*/
 &lt;&lt;link &quot;Fight.&quot;&gt;&gt;
   &lt;&lt;set $EnemyName to &quot;Goblin&quot;&gt;&gt;
    &lt;&lt;set $EnemyHp to &quot;80&quot;&gt;&gt;
@@ -233,69 +252,66 @@ Agile Message here
 $EnemyHp
 $EnemyDmg
 
+/* If the player starts with a $TurnCounter reduction move, will it break?
+Idk how SugarCube handles negative integers. */
+&lt;&lt;set $TurnCounter to 0&gt;&gt;
+&lt;&lt;set $MonsterTurn to 0&gt;&gt;
 
-Get player actions;
+/* Move format is as follows : &quot;attackName&quot;, [Damage], [Staminacost], [Manacost] */
+&lt;&lt;script&gt;&gt;
+State.variables.moves = [&quot;HeavyAttack&quot;, [5], [10], [0]];
+&lt;&lt;/script&gt;&gt;
 
 &lt;&lt;button &quot;Use Heavy Attack&quot;&gt;&gt;
-  &lt;&lt;set _result = useMove(&quot;Heavy Attack&quot;)&gt;&gt;
-  &lt;&lt;replace &quot;#result&quot;&gt;&gt;
-    &lt;span id=&quot;result&quot;&gt;&lt;&lt;print _result.message&gt;&gt;&lt;/span&gt;
-    &lt;!-- Optionally display additional values --&gt;
-    &lt;div&gt;Damage: &lt;&lt;print _result.damage&gt;&gt;&lt;/div&gt;
-    &lt;div&gt;Stamina: &lt;&lt;print _result.stamina&gt;&gt;&lt;/div&gt;
-  &lt;&lt;/replace&gt;&gt;
+&lt;&lt;set $TurnCounter += 1&gt;&gt;
+&lt;&lt;script&gt;&gt;
+var moves = State.variables.moves;
+var chosenMove = moves.indexOf(&quot;HeavyAttack&quot;);
+State.variables.damageMult = moves[chosenMove + 1][0];  
+State.variables.staminaCost = moves[chosenMove + 2][0]; 
+State.variables.manaCost = moves[chosenMove + 3][0]; 
+&lt;&lt;/script&gt;&gt;
+$damageMult
+$staminaCost
 &lt;&lt;/button&gt;&gt;
 
-&lt;!-- Placeholder for result display --&gt;
-&lt;span id=&quot;result&quot;&gt;&lt;/span&gt;
 
+/* The enemys turn should be at the bottom of the page.
+It checks the $TurnCounter to see $MonsterTurn is 1 less.
+If yes, it will execute an attack. otherwise, the player moves again.
+I anticipate this allowing the player to move multiple times for every
+enemy move if they have a move that reduces their own $TurnCounter */
 
-&lt;!-- Placeholder for result display --&gt;
-&lt;span id=&quot;result&quot;&gt;&lt;/span&gt;</tw-passagedata><tw-passagedata pid="10" name="Player Abilities" tags="Depracted" position="1200,200" size="100,100">&lt;&lt;set $abilities = [&quot;Strength&quot;, &quot;Agility&quot;, &quot;Intelligence&quot;]&gt;&gt;
+The $EnemyName strikes you for $EnemyDmg Damage!
+&lt;&lt;set $Hp -= $EnemyDmg&gt;&gt;</tw-passagedata><tw-passagedata pid="10" name="Player Abilities" tags="WIP" position="1200,200" size="100,100">&lt;&lt;script&gt;&gt;
+const moves = [&quot;HeavyAttack&quot;, [5], [10]];
 
-&lt;&lt;link &quot;Add Dexterity&quot;&gt;&gt;
-  &lt;&lt;set $abilities.push(&quot;Dexterity&quot;)&gt;&gt;
-  &lt;&lt;replace &quot;#abilities-list&quot;&gt;&gt;
-    Abilities:
-    &lt;ul id=&quot;abilities-list&quot;&gt;
-      &lt;&lt;for _ability range $abilities&gt;&gt;
-        &lt;li&gt;&lt;&lt;print _ability&gt;&gt;&lt;/li&gt;
-      &lt;&lt;/for&gt;&gt;
-    &lt;/ul&gt;
-  &lt;&lt;/replace&gt;&gt;
-&lt;&lt;/link&gt;&gt;
+var chosenMove = moves.indexOf(&quot;HeavyAttack&quot;);
+State.variables.damageMult = moves[chosenMove + 1];
+State.variables.staminaCost = moves[chosenMove + 2];
 
-&lt;&lt;link &quot;Remove Strength&quot;&gt;&gt;
-  &lt;&lt;set $abilities.splice($abilities.indexOf(&quot;Strength&quot;), 1)&gt;&gt;
-  &lt;&lt;replace &quot;#abilities-list&quot;&gt;&gt;
-    Abilities:
-    &lt;ul id=&quot;abilities-list&quot;&gt;
-      &lt;&lt;for _ability range $abilities&gt;&gt;
-        &lt;li&gt;&lt;&lt;print _ability&gt;&gt;&lt;/li&gt;
-      &lt;&lt;/for&gt;&gt;
-    &lt;/ul&gt;
-  &lt;&lt;/replace&gt;&gt;
-&lt;&lt;/link&gt;&gt;
+&lt;&lt;/script&gt;&gt;
 
-Abilities:
-&lt;ul id=&quot;abilities-list&quot;&gt;
-  &lt;&lt;for _ability range $abilities&gt;&gt;
-    &lt;li&gt;&lt;&lt;print _ability&gt;&gt;&lt;/li&gt;
-  &lt;&lt;/for&gt;&gt;
-&lt;/ul&gt;
+  $damageMult
+$staminaCost</tw-passagedata><tw-passagedata pid="11" name="Player Moves" tags="WIP" position="800,200" size="100,100">
+&lt;&lt;script&gt;&gt;
+  setup.moves = {
+    &quot;HeavyAttack&quot;: {
+      &quot;damageMultiplier&quot;: 2,
+      &quot;staminaCost&quot;: 5
+    },
+    &quot;Scrunch&quot;: {
+      &quot;damageMultiplier&quot;: 3,
+      &quot;staminaCost&quot;: 10
+    }
+  };
+&lt;&lt;/script&gt;&gt;
 
-
-[[Combat init test-&gt;Combat init test]] </tw-passagedata><tw-passagedata pid="11" name="Player Moves" tags="WIP" position="800,200" size="100,100">&lt;&lt;set $moves = { 
-  &quot;Heavy Attack&quot;: { &quot;damageMultiplier&quot;: 2, &quot;staminaCost&quot;: 5 } 
-}&gt;&gt;
-
-
-
-&lt;&lt;set $moves = { &quot;Heavy Attack&quot;: { &quot;damageMultiplier&quot;: 2, &quot;staminaCost&quot;: 5 } }&gt;&gt;
 
 
 
 [[Combat init test-&gt;Combat init test]] 
+
 </tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
 	/*! SugarCube JS */
