@@ -186,15 +186,27 @@ Strength: &lt;&lt;set $pcStr to 10&gt;&gt;&lt;span id=&quot;stats-str&quot;&gt;&
 → With forwarding: execute a script, then go to the specified passage
 &lt;&lt;link &quot;Onward, Reginald!&quot; &quot;On with the story&quot;&gt;&gt;&lt;&lt;script&gt;&gt;/* (code) */&lt;&lt;/script&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;&lt;link [[Onward, Reginald!|On with the story]]&gt;&gt;&lt;&lt;script&gt;&gt;/* (code) */&lt;&lt;/script&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link [img[onward.jpg][On with the story]]&gt;&gt;&lt;&lt;script&gt;&gt;/* (code) */&lt;&lt;/script&gt;&gt;&lt;&lt;/link&gt;&gt;</tw-passagedata><tw-passagedata pid="5" name="Dev room" tags="" position="1000,600" size="100,100">[[Magic-&gt;Magic Macguffin]]
-[[Strong-&gt;Strong Macguffin]]
-[[Agile-&gt;Agile Macguffin]]
+&lt;&lt;link [img[onward.jpg][On with the story]]&gt;&gt;&lt;&lt;script&gt;&gt;/* (code) */&lt;&lt;/script&gt;&gt;&lt;&lt;/link&gt;&gt;</tw-passagedata><tw-passagedata pid="5" name="Dev room" tags="" position="1000,600" size="100,100">&lt;&lt;link &quot;Godmode&quot;&gt;&gt;
+&lt;&lt;set $Hp to 1000&gt;&gt;
+&lt;&lt;set $Stamina to 1000&gt;&gt;
+&lt;&lt;set $Mana to 1000&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Make me a mage!&quot;&gt;&gt;
+&lt;&lt;set $Class to 1&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Make me a warrior!&quot;&gt;&gt;
+&lt;&lt;set $Class to 2&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Make me a rogue!&quot;&gt;&gt;
+&lt;&lt;set $Class to 3&gt;&gt;
+&lt;&lt;/link&gt;&gt;
 
-
-
-[[Boss Fight-&gt;Final Boss]]
-
-[[Entrance-&gt;Entrance]]</tw-passagedata><tw-passagedata pid="6" name="Frequent Commands" tags="" position="600,200" size="100,100">&amp; Variables! 
+[[Entrance-&gt;Entrance]]
+[[Magical Macguffin room-&gt;Magic Macguffin]]
+[[Strong Macguffin room-&gt;Strong Macguffin]]
+[[Agile Macguffin room-&gt;Agile Macguffin]]
+[[Final Fight-&gt;Final Boss]]
+</tw-passagedata><tw-passagedata pid="6" name="Frequent Commands" tags="" position="600,200" size="100,100">&amp; Variables! 
 $Name
 $Hp
 $Mana
@@ -225,85 +237,124 @@ Agile Message here
 
 &lt;&lt;set $moves = { 
   &quot;Heavy Attack&quot;: { &quot;damageMultiplier&quot;: 2, &quot;staminaCost&quot;: 5 } 
-}&gt;&gt;</tw-passagedata><tw-passagedata pid="8" name="Combat Framework" tags="WIP" position="1000,400" size="100,100">$EnemyName
-$EnemyHp
-$EnemyDmg
+}&gt;&gt;</tw-passagedata><tw-passagedata pid="8" name="Combat Framework" tags="WIP" position="1000,400" size="100,100">:: Start
+&lt;&lt;set $PlayerDmg to 10&gt;&gt; &lt;!-- Example player damage value --&gt;
+&lt;&lt;set $Hp to 100&gt;&gt; &lt;!-- Example player HP --&gt;
+&lt;&lt;set $Mana to 50&gt;&gt; &lt;!-- Example player mana --&gt;
+&lt;&lt;set $Stamina to 50&gt;&gt; &lt;!-- Example player stamina --&gt;
+&lt;&lt;set $EnemyName to &quot;Goblin&quot;&gt;&gt; &lt;!-- Example enemy name --&gt;
+&lt;&lt;set $EnemyHp to 80&gt;&gt; &lt;!-- Example enemy HP --&gt;
+&lt;&lt;set $EnemyDmg to 5&gt;&gt; &lt;!-- Example enemy damage --&gt;
 
-/* If the player starts with a $TurnCounter reduction move, will it break?
-Idk how SugarCube handles negative integers. */
-&lt;&lt;set $TurnCounter to 0&gt;&gt;
-&lt;&lt;set $MonsterTurn to 0&gt;&gt;
-
-/* Move format is as follows : &quot;attackName&quot;, [Damage], [Staminacost], [Manacost] */
-&lt;&lt;script&gt;&gt;
-State.variables.moves = [&quot;HeavyAttack&quot;, [5], [10], [0]];
-&lt;&lt;/script&gt;&gt;
-
-&lt;&lt;button &quot;Use Heavy Attack&quot;&gt;&gt;
-&lt;&lt;set $TurnCounter += 1&gt;&gt;
-&lt;&lt;set _Attack to &quot;Heavy Attack&quot;&gt;&gt;
-&lt;&lt;script&gt;&gt;
-var moves = State.variables.moves;
-var chosenMove = moves.indexOf(&quot;HeavyAttack&quot;);
-/*Can&#39;t I just deduct this directly from player stores?*/
-State.variables.damageMult = moves[chosenMove + 1][0];  
-State.variables.staminaCost = moves[chosenMove + 2][0]; 
-State.variables.manaCost = moves[chosenMove + 3][0]; 
-&lt;&lt;/script&gt;&gt;
-You use _Attack against the $EnemyName, striking the foe for $damageMult*$PlayerDmg
-&lt;&lt;set _Damage to $damageMult*$PlayerDmg&gt;&gt;
-&lt;&lt;set $EnemyHp -= _Damage&gt;&gt;
-The $EnemyName has $EnemyHp Hp left!
-&lt;&lt;/button&gt;&gt;
-
-
-&lt;&lt;if $EnemyHp lte 0&gt;&gt;
-&lt;&lt;set $CombatReturn to previous()&gt;&gt;
-  &lt;&lt;goto &quot;Victory&quot;&gt;&gt;
-    [[-&gt;Victory]]
-&lt;&lt;/if&gt;&gt;
-
-
-/* The enemys turn should be at the bottom of the page.
-It checks the $TurnCounter to see $MonsterTurn is 1 less.
-If yes, it will execute an attack. otherwise, the player moves again.
-I anticipate this allowing the player to move multiple times for every
-enemy move if they have a move that reduces their own $TurnCounter */
-
-The $EnemyName strikes you for $EnemyDmg Damage!
-&lt;&lt;set $Hp -= $EnemyDmg&gt;&gt;
-You have $Hp Hp left.
-
-
+&lt;&lt;link &quot;Start Combat&quot;&gt;&gt;
+  &lt;&lt;goto &quot;Combat&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
 
 :: Combat
+&lt;&lt;set $TurnCounter to 0&gt;&gt;
+&lt;&lt;set $MonsterTurn to 0&gt;&gt;
 &lt;&lt;set $combatOngoing to true&gt;&gt;
 
+&lt;&lt;script&gt;&gt;
+State.variables.moves = [
+  &quot;HeavyAttack&quot;, [5], [10], [0], [0], // HeavyAttack: [Damage, StaminaCost, ManaCost, TurnReduction]
+  &quot;FrostBolt&quot;, [3], [0], [10], [2] // FrostBolt: [Damage, StaminaCost, ManaCost, TurnReduction]
+];
+&lt;&lt;/script&gt;&gt;
+
+&lt;div id=&quot;combat-log&quot;&gt;
+  &lt;!-- Initial combat description --&gt;
+  You pass through the iron door into an arena. Several monstrous occupants begin jeering at you and throwing food at you.
+  &lt;&lt;set _Dialogue to &quot;&quot;&gt;&gt;
+&lt;/div&gt;
+
+&lt;!-- Buttons for Player Actions --&gt;
+&lt;&lt;button &quot;Use Heavy Attack&quot;&gt;&gt;
+  &lt;&lt;set $TurnCounter += 1&gt;&gt;
+  &lt;&lt;set _Attack to &quot;HeavyAttack&quot;&gt;&gt;
+  &lt;&lt;script&gt;&gt;
+  var moves = State.variables.moves;
+  var chosenMove = moves.indexOf(&quot;HeavyAttack&quot;);
+  State.variables.damageMult = moves[chosenMove + 1][0];
+  State.variables.staminaCost = moves[chosenMove + 2][0];
+  State.variables.manaCost = moves[chosenMove + 3][0];
+  State.variables.turnReduction = moves[chosenMove + 4][0];
+  &lt;&lt;/script&gt;&gt;
+  &lt;&lt;set _Damage to $damageMult * $PlayerDmg&gt;&gt;
+  &lt;&lt;set $EnemyHp -= _Damage&gt;&gt;
+  &lt;&lt;replace &quot;#combat-log&quot;&gt;&gt;
+    &lt;&lt;_Dialogue&gt;&gt;
+    You use Heavy Attack against the $EnemyName, striking the foe for _Damage damage. The $EnemyName has $EnemyHp HP left!
+  &lt;&lt;/replace&gt;&gt;
+  &lt;&lt;set $Stamina -= $staminaCost&gt;&gt;
+  &lt;&lt;set $Mana -= $manaCost&gt;&gt;
+&lt;&lt;/button&gt;&gt;
+
+&lt;&lt;button &quot;Use Frost Bolt&quot;&gt;&gt;
+  &lt;&lt;set $TurnCounter += 1&gt;&gt;
+  &lt;&lt;set _Attack to &quot;FrostBolt&quot;&gt;&gt;
+  &lt;&lt;script&gt;&gt;
+  var moves = State.variables.moves;
+  var chosenMove = moves.indexOf(&quot;FrostBolt&quot;);
+  State.variables.damageMult = moves[chosenMove + 1][0];
+  State.variables.staminaCost = moves[chosenMove + 2][0];
+  State.variables.manaCost = moves[chosenMove + 3][0];
+  State.variables.turnReduction = moves[chosenMove + 4][0];
+  &lt;&lt;/script&gt;&gt;
+  &lt;&lt;set _Damage to $damageMult * $PlayerDmg&gt;&gt;
+  &lt;&lt;set $EnemyHp -= _Damage&gt;&gt;
+  &lt;&lt;set $TurnCounter -= $turnReduction&gt;&gt; &lt;!-- Apply turn reduction --&gt;
+  &lt;&lt;replace &quot;#combat-log&quot;&gt;&gt;
+    &lt;&lt;_Dialogue&gt;&gt;
+    You use Frost Bolt against the $EnemyName, striking the foe for _Damage damage. The $EnemyName has $EnemyHp HP left!
+  &lt;&lt;/replace&gt;&gt;
+  &lt;&lt;set $Stamina -= $staminaCost&gt;&gt;
+  &lt;&lt;set $Mana -= $manaCost&gt;&gt;
+&lt;&lt;/button&gt;&gt;
+
+&lt;!-- Combat Logic --&gt;
 &lt;&lt;while $combatOngoing&gt;&gt;
   &lt;&lt;if $TurnCounter &lt; $MonsterTurn&gt;&gt;
     &lt;!-- Player&#39;s Turn --&gt;
     &lt;&lt;set $TurnCounter += 1&gt;&gt;
     &lt;!-- Code for player&#39;s turn goes here --&gt;
-    You take your turn. Your turn count is now: $TurnCounter.
-
+    &lt;&lt;replace &quot;#combat-log&quot;&gt;&gt;
+      &lt;&lt;_Dialogue&gt;&gt;
+      You take your turn. Your turn count is now: $TurnCounter.
+    &lt;&lt;/replace&gt;&gt;
   &lt;&lt;elseif $TurnCounter &gt; $MonsterTurn&gt;&gt;
     &lt;!-- If TurnCounter is ahead, it should wait for MonsterTurn --&gt;
-    Your turn count is ahead of the monster&#39;s turn. Waiting for monster...
-    
+    &lt;&lt;replace &quot;#combat-log&quot;&gt;&gt;
+      &lt;&lt;_Dialogue&gt;&gt;
+      Your turn count is ahead of the monster&#39;s turn. Waiting for monster...
+    &lt;&lt;/replace&gt;&gt;
   &lt;&lt;else&gt;&gt;
     &lt;!-- Monster&#39;s Turn --&gt;
     &lt;&lt;set $MonsterTurn += 1&gt;&gt;
-    &lt;!-- Code for monster&#39;s turn goes here --&gt;
-    The monster takes its turn. Monster turn count is now: $MonsterTurn.
+    &lt;&lt;set $Hp -= $EnemyDmg&gt;&gt;
+    &lt;&lt;replace &quot;#combat-log&quot;&gt;&gt;
+      &lt;&lt;_Dialogue&gt;&gt;
+      The $EnemyName strikes you for $EnemyDmg damage. You have $Hp HP left. Monster turn count is now: $MonsterTurn.
+    &lt;&lt;/replace&gt;&gt;
   &lt;&lt;/if&gt;&gt;
 
-  &lt;&lt;if $TurnCounter &gt;= 10 or $MonsterTurn &gt;= 10&gt;&gt;
-    &lt;!-- Condition to end the loop, such as when a certain turn count is reached --&gt;
+  &lt;&lt;if $EnemyHp &lt;= 0&gt;&gt;
     &lt;&lt;set $combatOngoing to false&gt;&gt;
+    &lt;&lt;goto &quot;Victory&quot;&gt;&gt;
+  &lt;&lt;/if&gt;&gt;
+  &lt;&lt;if $Hp &lt;= 0&gt;&gt;
+    &lt;&lt;set $combatOngoing to false&gt;&gt;
+    &lt;&lt;goto &quot;Defeat&quot;&gt;&gt;
   &lt;&lt;/if&gt;&gt;
 &lt;&lt;/while&gt;&gt;
 
 Combat has ended. You had $TurnCounter turns and the monster had $MonsterTurn turns.
+
+:: Victory
+Congratulations! You have defeated the $EnemyName.
+
+:: Defeat
+You have been defeated by the $EnemyName.
 </tw-passagedata><tw-passagedata pid="9" name="Hero Ending" tags="" position="1600,700" size="100,100">Discard the Macguffins &amp; shit upon the throne</tw-passagedata><tw-passagedata pid="10" name="Final Boss" tags="" position="1400,600" size="100,100">You enter the final room &amp; see the dungeon&#39;s lord upon his throne. He looks down on you with revulsion.
 
 
@@ -342,7 +393,7 @@ Strong Message here
 Agile Message here
 &lt;&lt;/if&gt;&gt;
 
-[[Return-&gt;Dev room]]</tw-passagedata><tw-passagedata pid="12" name="Strong Macguffin" tags="" position="1400,975" size="100,100">&lt;img src=&quot;Bodybuilder.png&quot;&gt;
+[[Return-&gt;Entrance]]</tw-passagedata><tw-passagedata pid="12" name="Strong Macguffin" tags="" position="1400,975" size="100,100">&lt;img src=&quot;Bodybuilder.png&quot;&gt;
 &lt;img data-passage=&quot;Bodybuilder.png&quot;&gt;
 [img[Bodybuilder.png]]
 
@@ -373,13 +424,13 @@ You enter the room and encounter a tank of a man. He takes one look at your smal
 
 &lt;/if&gt;
 
-[[Return-&gt;Dev room]]</tw-passagedata><tw-passagedata pid="13" name="Agile Macguffin" tags="" position="1500,950" size="100,100">
+[[Return-&gt;Entrance]]</tw-passagedata><tw-passagedata pid="13" name="Agile Macguffin" tags="" position="1500,950" size="100,100">
 &lt;&lt;script&gt;&gt;
 State.variables.Macguffins[2] = true;
 &lt;&lt;/script&gt;&gt;
 
-As you grab hold of the Macguffin, a [[door-&gt;Dev room]] opens, promising to return you to the start of the dungeon.
-[[Return-&gt;Dev room]]</tw-passagedata><tw-passagedata pid="14" name="Macguffin problems" tags="" position="1400,1100" size="100,100">In strong, images try an display but it can&#39;t find them in the directory. Why? If I knew this wouldn&#39;t be broke &gt;.&gt;
+As you grab hold of the Macguffin, a [[door-&gt;Entrance]] opens, promising to return you to the start of the dungeon.
+[[Return-&gt;Entrance]]</tw-passagedata><tw-passagedata pid="14" name="Macguffin problems" tags="" position="1400,1100" size="100,100">In strong, images try an display but it can&#39;t find them in the directory. Why? If I knew this wouldn&#39;t be broke &gt;.&gt;
 
 Players can kind of repeatedley enter Macguffin rooms &amp; &quot;collect&quot; the Macguffin multiple times, though it doesn&#39;t do anything since I used a boolean. shouldn&#39;t break anything but it doesnt make any sense.</tw-passagedata><tw-passagedata pid="15" name="Devil in the details" tags="" position="1400,700" size="100,100">  &lt;&lt;script&gt;&gt;
 State.variables.Macguffins = [false, false, false];
