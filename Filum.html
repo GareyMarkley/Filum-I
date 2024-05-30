@@ -157,7 +157,17 @@ Unlike other dungeon-delving games, this one does not utilize stats such as Stre
 
 
 
-[[Continue-&gt;In the Beginning]]</tw-passagedata><tw-passagedata pid="4" name="Saved Code" tags="" position="600,100" size="100,100">&lt;&lt;set _greetings to [&quot;hi&quot;, &quot;hello&quot;, &quot;good day&quot;, &quot;greetings&quot;]&gt;&gt;\
+[[Continue-&gt;In the Beginning]]</tw-passagedata><tw-passagedata pid="4" name="Saved Code" tags="" position="600,100" size="100,100">→ Example setup
+I saw a &lt;span id=&quot;dog&quot;&gt;dog&lt;/span&gt;.
+
+→ Replace the contents of the target element
+&lt;&lt;link &quot;Breed&quot;&gt;&gt;
+	&lt;&lt;replace &quot;#dog&quot;&gt;&gt;Catahoula Cur&lt;&lt;/replace&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+
+
+
+&lt;&lt;set _greetings to [&quot;hi&quot;, &quot;hello&quot;, &quot;good day&quot;, &quot;greetings&quot;]&gt;&gt;\
 The man says, &quot;@@#target;&lt;&lt;= _greetings.random()&gt;&gt;@@.&quot;
 
 &lt;&lt;link &quot;Change&quot;&gt;&gt;
@@ -565,6 +575,41 @@ You: &quot;I understand. I am ready.&quot;
 Statue: &quot;Then step forward, and may your resolve be unyielding.&quot;</tw-passagedata><tw-passagedata pid="28" name="Statue Encounter" tags="" position="600,1400" size="100,100">Approaching the statue, you see that it&#39;s carved from jet-black marble, its features twisted and demonic. As you near, it speaks in a gravelly voice that sends shivers down your spine. Its riddles are cryptic and enigmatic, challenging your understanding of the arcane. It asks you about your purpose here, your motivations, and your knowledge of the dungeon&#39;s secrets. You sense that it holds immense power, but whether it&#39;s willing to aid or hinder your quest remains unclear.
 
 The statue seems satisfied with your answers &amp; dispels a nearby illusion, revealing an ornate door.
+</tw-passagedata><tw-passagedata pid="29" name="Combat Revamp" tags="" position="1000,175" size="100,100">&lt;!-- Format: Damage [0], StaminaCost [1], ManaCost [2], TurnUsage [3] --&gt;
+&lt;&lt;set $attacks to {
+    &quot;Fireball&quot;: [50, 10, 25, 40],
+    &quot;Frost Bolt&quot;: [30, 20, 30, -30],
+    &quot;Lightning Bolt&quot;: [100, 50, 100, 25],
+    &quot;Shield&quot;: [0, -20, 10, 25],
+    
+    &quot;Strike&quot;: [50, 30, 0, 30],
+    &quot;Heavy Strike&quot;: [75, 50, 0, 40],
+    &quot;Flourish&quot;: [125, 100, 0, 40],
+    &quot;Disarm&quot;: [0, 50, 0, -30],
+    
+    &quot;Stab&quot;: [25, 10, 0, 10],
+    &quot;Hamstring&quot;: [40, 30, 0, -10],
+    &quot;Backstab&quot;: [100, 60, 30, 50], &lt;!-- Go for the spine!--!&gt;
+    &quot;Vanish&quot;: [0, 25, 100, -75]
+}&gt;&gt;
+
+
+
+
+
+&lt;&lt;set $EnemyHp to 100&gt;&gt;
+
+&lt;!-- Combat&#39;s so called UI --!&gt;
+&lt;span id=&quot;damageLog&quot;&gt;&lt;/span&gt;
+Enemy HP: &lt;span id=&quot;enemyHp&quot;&gt;&lt;&lt;= $EnemyHp&gt;&gt;&lt;/span&gt;
+
+&lt;!-- Retrieve the Attack array by its name --&gt;
+&lt;&lt;button &quot;Heavy Strike&quot;&gt;&gt;
+    &lt;&lt;set $PlayerAttack to $attacks[&quot;Heavy Strike&quot;]&gt;&gt;
+    &lt;&lt;set $EnemyHp -= $PlayerAttack[0]&gt;&gt;
+    &lt;&lt;replace &quot;#enemyHp&quot;&gt;&gt;&lt;&lt;= $EnemyHp&gt;&gt;&lt;&lt;/replace&gt;&gt;
+    &lt;&lt;replace &quot;#damageLog&quot;&gt;&gt;You strike the foe for &lt;&lt;= $PlayerAttack[0]&gt;&gt; damage!&lt;&lt;/replace&gt;&gt;
+&lt;&lt;/button&gt;&gt;
 </tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
 	/*! SugarCube JS */
