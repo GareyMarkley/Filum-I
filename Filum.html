@@ -122,21 +122,21 @@ One wields a &lt;&lt;link &quot; Staff.&quot;&gt;&gt;
   &lt;&lt;set $Hp to 100&gt;&gt;
 &lt;&lt;set $Stamina to 80&gt;&gt;
 &lt;&lt;set $Mana to 150&gt;&gt;
-  &lt;&lt;goto &quot;Chara create&quot;&gt;&gt;
+  &lt;&lt;goto &quot;Entrance&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 Another a &lt;&lt;link &quot; Greatsword.&quot;&gt;&gt;
   &lt;&lt;set $Class to &quot;2&quot;&gt;&gt;
   &lt;&lt;set $Hp to 150&gt;&gt;
 &lt;&lt;set $Stamina to 100&gt;&gt;
 &lt;&lt;set $Mana to 50&gt;&gt;
-  &lt;&lt;goto &quot;Chara create&quot;&gt;&gt;
+  &lt;&lt;goto &quot;Entrance&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 The last a short blade and a &lt;&lt;link &quot; Bow&quot;&gt;&gt;
   &lt;&lt;set $Class to &quot;3&quot;&gt;&gt;
   &lt;&lt;set $Hp to 80&gt;&gt;
 &lt;&lt;set $Stamina to 150&gt;&gt;
 &lt;&lt;set $Mana to 100&gt;&gt;
-  &lt;&lt;goto &quot;Chara create&quot;&gt;&gt;
+  &lt;&lt;goto &quot;Entrance&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt; on their back.
 Which path will doth your feet take you?
 &lt;label&gt;What is your name? &lt;&lt;textbox &quot;$Name&quot; &quot;Hero&quot;&gt;&gt;&lt;/label&gt;
@@ -502,7 +502,9 @@ While not much of a secret nowadays, there is another hallway which is blocked b
 
 As you step into the dungeon, the entrance quickly fades into memory, replaced by the sight of a long, dimly lit hallway. The air is musty and heavy with the scent of mold and old stone. To your right, an iron door with two swords crossed over a shield marks the entrance to the dojo. The sound of steel clashing against wood echoes faintly from within. The hallway seems straightforward enough, but something feels off about it... Just as you begin to wonder, you notice a seemingly ordinary wall on your left rippling strangely - it&#39;s actually a simple illusion hiding the entrance to the Hall of Mirrors. The room beyond is a kaleidoscope of reflections and distortions, making it difficult to discern which way is truly forward.
 
-[[Challenge the Dungeon&#39;s Master-&gt;Final Boss]]</tw-passagedata><tw-passagedata pid="20" name="Trapped Hallway" tags="" position="1000,1200" size="100,100">As you step forward, the floor crumbles beneath your feet, sending you plummeting into darkness. 
+[[Challenge the Dungeon&#39;s Master-&gt;Final Boss]]
+
+[[Combat Revamp-&gt;Combat Revamp]] </tw-passagedata><tw-passagedata pid="20" name="Trapped Hallway" tags="" position="1000,1200" size="100,100">As you step forward, the floor crumbles beneath your feet, sending you plummeting into darkness. 
 
 &lt;&lt;If $Class == 3&gt;&gt;
 You twist midair &amp; catch yourself between the two walls. Looking down you see your old companion the Greatswordsmen crumbled on the floor. He didn&#39;t survive the fall.
@@ -575,7 +577,11 @@ You: &quot;I understand. I am ready.&quot;
 Statue: &quot;Then step forward, and may your resolve be unyielding.&quot;</tw-passagedata><tw-passagedata pid="28" name="Statue Encounter" tags="" position="600,1400" size="100,100">Approaching the statue, you see that it&#39;s carved from jet-black marble, its features twisted and demonic. As you near, it speaks in a gravelly voice that sends shivers down your spine. Its riddles are cryptic and enigmatic, challenging your understanding of the arcane. It asks you about your purpose here, your motivations, and your knowledge of the dungeon&#39;s secrets. You sense that it holds immense power, but whether it&#39;s willing to aid or hinder your quest remains unclear.
 
 The statue seems satisfied with your answers &amp; dispels a nearby illusion, revealing an ornate door.
-</tw-passagedata><tw-passagedata pid="29" name="Combat Revamp" tags="" position="1000,175" size="100,100">&lt;!-- Format: Damage [0], StaminaCost [1], ManaCost [2], TurnUsage [3] --&gt;
+</tw-passagedata><tw-passagedata pid="29" name="Combat Revamp" tags="" position="600,400" size="100,100">:: StoryTitle
+Twine Class-Based Attacks Example
+
+:: Start
+&lt;!-- Format: Damage [0], StaminaCost [1], ManaCost [2], TurnUsage [3] --&gt;
 &lt;&lt;set $attacks to {
     &quot;Fireball&quot;: [50, 10, 25, 40],
     &quot;Frost Bolt&quot;: [30, 20, 30, -30],
@@ -592,24 +598,42 @@ The statue seems satisfied with your answers &amp; dispels a nearby illusion, re
     &quot;Backstab&quot;: [100, 60, 30, 50], &lt;!-- Go for the spine!--!&gt;
     &quot;Vanish&quot;: [0, 25, 100, -75]
 }&gt;&gt;
+&lt;!-- I think this is what the kids call a &quot;Memory Leak&quot; --!&gt;
 
+&lt;!-- Map integers to class names --&gt;
+&lt;&lt;set $classNames to {
+    1: &quot;Mage&quot;,
+    2: &quot;Warrior&quot;,
+    3: &quot;Rogue&quot;
+}&gt;&gt;
 
-
-
+&lt;!-- Map classes to their specific attacks --&gt;
+&lt;&lt;set $classAttacks to {
+    &quot;Mage&quot;: [&quot;Fireball&quot;, &quot;Frost Bolt&quot;, &quot;Lightning Bolt&quot;, &quot;Shield&quot;],
+    &quot;Warrior&quot;: [&quot;Strike&quot;, &quot;Heavy Strike&quot;, &quot;Flourish&quot;, &quot;Disarm&quot;],
+    &quot;Rogue&quot;: [&quot;Stab&quot;, &quot;Hamstring&quot;, &quot;Backstab&quot;, &quot;Vanish&quot;]
+}&gt;&gt;
 
 &lt;&lt;set $EnemyHp to 100&gt;&gt;
 
-&lt;!-- Combat&#39;s so called UI --!&gt;
+&lt;!-- Combat&#39;s so-called UI --&gt;
 &lt;span id=&quot;damageLog&quot;&gt;&lt;/span&gt;
 Enemy HP: &lt;span id=&quot;enemyHp&quot;&gt;&lt;&lt;= $EnemyHp&gt;&gt;&lt;/span&gt;
 
-&lt;!-- Retrieve the Attack array by its name --&gt;
-&lt;&lt;button &quot;Heavy Strike&quot;&gt;&gt;
-    &lt;&lt;set $PlayerAttack to $attacks[&quot;Heavy Strike&quot;]&gt;&gt;
-    &lt;&lt;set $EnemyHp -= $PlayerAttack[0]&gt;&gt;
-    &lt;&lt;replace &quot;#enemyHp&quot;&gt;&gt;&lt;&lt;= $EnemyHp&gt;&gt;&lt;&lt;/replace&gt;&gt;
-    &lt;&lt;replace &quot;#damageLog&quot;&gt;&gt;You strike the foe for &lt;&lt;= $PlayerAttack[0]&gt;&gt; damage!&lt;&lt;/replace&gt;&gt;
-&lt;&lt;/button&gt;&gt;
+&lt;!-- Retrieve the player&#39;s class name using the integer --&gt;
+&lt;&lt;set $playerClass to $classNames[$Class]&gt;&gt;
+
+&lt;!-- Generate attack buttons based on the player&#39;s class --&gt;
+&lt;&lt;for _attackName range $classAttacks[$playerClass]&gt;&gt;
+    &lt;&lt;capture _attackName&gt;&gt;
+        &lt;&lt;button _attackName&gt;&gt;
+            &lt;&lt;set $PlayerAttack to $attacks[_attackName]&gt;&gt;
+            &lt;&lt;set $EnemyHp -= $PlayerAttack[0]&gt;&gt;
+            &lt;&lt;replace &quot;#enemyHp&quot;&gt;&gt;&lt;&lt;= $EnemyHp&gt;&gt;&lt;&lt;/replace&gt;&gt;
+            &lt;&lt;replace &quot;#damageLog&quot;&gt;&gt;You use &lt;&lt;= _attackName &gt;&gt; and deal &lt;&lt;= $PlayerAttack[0]&gt;&gt; damage!&lt;&lt;/replace&gt;&gt;
+        &lt;&lt;/button&gt;&gt;&lt;br&gt;
+    &lt;&lt;/capture&gt;&gt;
+&lt;&lt;/for&gt;&gt;
 </tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
 	/*! SugarCube JS */
