@@ -410,9 +410,16 @@ As you navigate the twisting sub-path, you come across an auspicious-looking doo
 &lt;div id=&quot;dialogue&quot;&gt;&lt;&lt;_Dialogue&gt;&gt;&lt;/div&gt;
 
 &lt;&lt;button &quot;Eat some&quot;&gt;&gt;
+
+
   &lt;&lt;set $Stamina += 10&gt;&gt;
   &lt;&lt;set _Dialogue to &quot;The creatures laugh and insult you before throwing more food at you.&quot;&gt;&gt;
   &lt;&lt;replace &quot;#dialogue&quot;&gt;&gt;&lt;&lt;_Dialogue&gt;&gt;&lt;&lt;/replace&gt;&gt;
+&lt;&lt;/button&gt;&gt;
+
+&lt;&lt;button Rest&gt;&gt;
+		&lt;&lt;set $Stamina += $MaxStamina * .15&gt;&gt;
+		&lt;&lt;replace &quot;#PlayerStamina&quot;&gt;&gt;&lt;&lt;= $Stamina&gt;&gt;&lt;&lt;/replace&gt;&gt;
 &lt;&lt;/button&gt;&gt;
 
 [[Leave -&gt;Entrance]]
@@ -555,10 +562,12 @@ I could likely use some kind of workaround, but ffffffffuuuuu
     &lt;&lt;/capture&gt;&gt;
 &lt;&lt;/for&gt;&gt;
 &lt;&lt;button Rest&gt;&gt;
-&lt;&lt;set $Stamina += $MaxStamina * .15&gt;&gt;
+		&lt;&lt;set $Stamina += $MaxStamina * .15&gt;&gt;
+		&lt;&lt;replace &quot;#PlayerStamina&quot;&gt;&gt;&lt;&lt;= $Stamina&gt;&gt;&lt;&lt;/replace&gt;&gt;
 &lt;&lt;/button&gt;&gt;
 &lt;&lt;button meditate&gt;&gt;
-&lt;&lt;set $Mana += $MaxMana * .15&gt;&gt;
+		&lt;&lt;set $Mana += $MaxMana * .15&gt;&gt;
+		&lt;&lt;replace &quot;#PlayerMana&quot;&gt;&gt;&lt;&lt;= $Mana&gt;&gt;&lt;&lt;/replace&gt;&gt;
 &lt;&lt;/button&gt;&gt;</tw-passagedata><tw-passagedata pid="28" name="Defeat" tags="" position="1200,300" size="100,100">RIP</tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
 	/*! SugarCube JS */
